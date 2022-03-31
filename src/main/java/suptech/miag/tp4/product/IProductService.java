@@ -7,6 +7,6 @@ public interface IProductService {
     Product updateProduct(Product product) throws Exception;
     Product deleteProduct(Product product) throws Exception;
     Product getProduct(String ref) throws Exception;
-    List<Product> getProducts(String ref) throws Exception;
+    List<Product> getProducts() throws Exception;
     List<Product> getProductsByLabel(String label) throws Exception;
 }

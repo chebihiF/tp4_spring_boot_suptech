@@ -1,7 +1,10 @@
 package suptech.miag.tp4.product;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
@@ -26,21 +29,22 @@ public class ProductService implements IProductService{
 
     @Override
     public Product deleteProduct(Product product) throws Exception {
-        return null;
+        productRepository.delete(product);
+        return product;
     }
 
     @Override
     public Product getProduct(String ref) throws Exception {
-        return null;
+        return productRepository.findById(ref).get();
     }
 
     @Override
-    public List<Product> getProducts(String ref) throws Exception {
-        return null;
+    public List<Product> getProducts() throws Exception {
+        return productRepository.findAll();
     }
 
     @Override
     public List<Product> getProductsByLabel(String label) throws Exception {
-        return null;
+        return productRepository.findProductByLabelStartingWith(label);
     }
 }
