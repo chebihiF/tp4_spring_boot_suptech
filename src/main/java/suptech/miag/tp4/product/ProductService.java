@@ -1,5 +1,7 @@
 package suptech.miag.tp4.product;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,11 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> getProducts() throws Exception {
         return productRepository.findAll();
+    }
+
+    @Override
+    public Page<Product> getProductsByPages(Pageable pageable) throws Exception {
+        return productRepository.findAll(pageable);
     }
 
     @Override
