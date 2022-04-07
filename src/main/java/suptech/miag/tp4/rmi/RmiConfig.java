@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.rmi.RmiServiceExporter;
 import org.springframework.remoting.support.RemoteExporter;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+
 @Configuration
 public class RmiConfig {
 
@@ -20,6 +23,11 @@ public class RmiConfig {
         exporter.setServiceName("productRMI");
         exporter.setServiceInterface(ProductRemote.class);
         exporter.setService(remote);
+        try {
+            exporter.setRegistry(LocateRegistry.createRegistry(1099));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         System.out.println(remote);
         return exporter;
     }
