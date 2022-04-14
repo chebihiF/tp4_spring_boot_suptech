@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static suptech.miag.tp4.sec.ApplicationUserAuthority.*;
 import static suptech.miag.tp4.sec.ApplicationUserRole.*;
 
 @Configuration
@@ -29,7 +30,15 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/","/index.html").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/products/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/**").hasAnyRole(ADMIN.name(),MANAGER.name())
+                .antMatchers(HttpMethod.GET,"/api/v1/products/**")
+                .hasAuthority(PRODUCT_READ.getAuthority())
+                .antMatchers(HttpMethod.POST,"/api/v1/products/**")
+                .hasAuthority(PRODUCT_WRITE.getAuthority())
+                .antMatchers(HttpMethod.DELETE,"/api/v1/products/**")
+                .hasAuthority(PRODUCT_DELETE.getAuthority())
+                .antMatchers(HttpMethod.PUT,"/api/v1/products/**")
+                .hasAuthority(PRODUCT_UPDATE.getAuthority())
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
@@ -46,14 +55,15 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .username("Admin")
                 .password(passwordEncoder.encode("Admin"))
 //                .roles(ADMIN.name())
-                .authorities()
+                .authorities(ADMIN.getAuthorities())
                 .build();
 
         UserDetails manager = User
                 .builder()
                 .username("user")
                 .password(passwordEncoder.encode("1234"))
-                .roles(MANAGER.name())
+//                .roles(MANAGER.name())
+                .authorities(MANAGER.getAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(admin,manager);
