@@ -3,14 +3,13 @@ package suptech.miag.tp4.sec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import static suptech.miag.tp4.sec.ApplicationUserAuthority.*;
 import static suptech.miag.tp4.sec.ApplicationUserRole.*;
@@ -20,9 +19,11 @@ import static suptech.miag.tp4.sec.ApplicationUserRole.*;
 public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
-    public ApplicationConfigurerAdapter(PasswordEncoder passwordEncoder) {
+    public ApplicationConfigurerAdapter(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -47,6 +48,20 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
+
+    /*
     @Override
     @Bean
     public UserDetailsService userDetailsServiceBean() throws Exception {
@@ -76,5 +91,5 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .build();
 
         return new InMemoryUserDetailsManager(admin,manager,user);
-    }
+    }*/
 }

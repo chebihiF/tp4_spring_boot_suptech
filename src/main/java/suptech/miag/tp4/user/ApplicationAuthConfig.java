@@ -20,7 +20,7 @@ public class ApplicationAuthConfig {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner initUserAuth(){
         return args -> {
             // users
