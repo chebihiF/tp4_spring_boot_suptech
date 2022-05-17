@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import suptech.miag.tp4.jwt.JwtTokenVerifier;
 import suptech.miag.tp4.jwt.JwtUsernameAndPasswordFilter;
 
 import static suptech.miag.tp4.sec.ApplicationUserAuthority.*;
@@ -49,7 +50,8 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()));
+                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
+                .addFilterAfter(new JwtTokenVerifier(),JwtUsernameAndPasswordFilter.class);
 
     }
 
