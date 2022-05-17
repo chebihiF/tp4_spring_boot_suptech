@@ -8,8 +8,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import suptech.miag.tp4.jwt.JwtUsernameAndPasswordFilter;
 
 import static suptech.miag.tp4.sec.ApplicationUserAuthority.*;
 import static suptech.miag.tp4.sec.ApplicationUserRole.*;
@@ -30,6 +32,8 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
                 .antMatchers("/","/index.html").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole(ADMIN.name(),MANAGER.name())
@@ -45,7 +49,8 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()));
+
     }
 
     @Override
