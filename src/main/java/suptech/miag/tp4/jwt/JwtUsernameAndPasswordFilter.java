@@ -27,8 +27,9 @@ public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthentication
         this.authenticationManager = authenticationManager;
     }
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    @Override // /login
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response) throws AuthenticationException {
 
         try {
             UsernameAndPasswordRequest usernameAndPasswordRequest =

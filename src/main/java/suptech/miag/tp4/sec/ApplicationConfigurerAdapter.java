@@ -36,7 +36,7 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/index.html").permitAll()
+                .antMatchers("/","/index.html","/refreshToken").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole(ADMIN.name(),MANAGER.name())
                 .antMatchers(HttpMethod.GET,"/api/v1/products/**")
                 .hasAuthority(PRODUCT_READ.getAuthority())
